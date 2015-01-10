@@ -40,7 +40,7 @@ public class MainActivity extends Activity implements DirectoryChooserFragment.O
     private ImageView syncNoLocationBackground;
     private Button syncAddLocationButton;
 
-    private TextView folderChoosen;
+    private TextView folderChosen;
     private DirectoryChooserFragment mDialog;
 
     @Override
@@ -72,19 +72,18 @@ public class MainActivity extends Activity implements DirectoryChooserFragment.O
                                 String serverName = ((EditText) dialog.findViewById(R.id.custom_dialog_nas_server_user)).getText().toString();
                                 String serverPass = ((EditText) dialog.findViewById(R.id.custom_dialog_nas_server_pass)).getText().toString();
 
-                                String clientFolder = folderChoosen.getText().toString();
+                                String clientFolder = folderChosen.getText().toString();
 
                                 if (!NetUtils.isValidNetworkAddress(serverAddress)) {
-                                    new SnackBar(MainActivity.this, "Die Serveradresse ich nicht gültig.").show();
+                                    new SnackBar(MainActivity.this, getString(R.string.msg_address_not_valid)).show();
                                 }
                                 if (!NetUtils.isCifsShare(serverAddress)) {
-                                    new SnackBar(MainActivity.this, "Der angegebene Server ist kein CIFS Server.").show();
+                                    new SnackBar(MainActivity.this, getString(R.string.msg_server_no_cifs)).show();
                                 }
                                 if (dbHandler.saveData(new SyncModel(serverAddress, serverName, serverPass, clientFolder)) != -1) {
-                                    Toast.makeText(MainActivity.this, "Gespeichert", Toast.LENGTH_SHORT).show();
                                     MainActivity.this.fillLocationsListView(dbHandler.getData());
                                 } else {
-                                    new SnackBar(MainActivity.this, "Konnte die Daten nicht speichern.").show();
+                                    new SnackBar(MainActivity.this, getString(R.string.msg_could_not_save)).show();
                                 }
                             }
 
@@ -97,11 +96,11 @@ public class MainActivity extends Activity implements DirectoryChooserFragment.O
 
                 dialog.show();
 
-                folderChoosen = ((TextView) dialog.findViewById(R.id.custom_dialog_nas_client_folder));
-                folderChoosen.setOnClickListener(new View.OnClickListener() {
+                folderChosen = ((TextView) dialog.findViewById(R.id.custom_dialog_nas_client_folder));
+                folderChosen.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mDialog = DirectoryChooserFragment.newInstance("DialogSample", null);
+                        mDialog = DirectoryChooserFragment.newInstance(getString(R.string.dlg_choose_folder_title), null);
                         mDialog.show(getFragmentManager(), null);
                     }
                 });
@@ -170,8 +169,8 @@ public class MainActivity extends Activity implements DirectoryChooserFragment.O
 
     @Override
     public void onSelectDirectory(@NonNull String s) {
-        if (folderChoosen != null) {
-            folderChoosen.setText(s);
+        if (folderChosen != null) {
+            folderChosen.setText(s);
         }
         mDialog.dismiss();
     }

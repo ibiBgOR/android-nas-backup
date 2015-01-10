@@ -8,6 +8,9 @@
 
     <string name="msg_no_server_specified">Es wurden noch keine Synchronisationsordner festgelegt.</string>
     <string name="msg_no_internet_connection">Keine Internetverbindung.</string>
+    <string name="msg_address_not_valid">Die Serveradresse ich nicht gültig.</string>
+    <string name="msg_server_no_cifs">Der angegebene Server ist kein CIFS Server.</string>
+    <string name="msg_could_not_save">Konnte die Daten nicht speichern.</string>
 
     <string name="dlg_add_sync">Anlegen einer neuen Synchronisation</string>
     <string name="dlg_add_sync_title_server">Servereinstellungen:</string>
@@ -18,5 +21,6 @@
     <string name="dlg_add_sync_text_client_hint">Kein Ordner ausgewählt.</string>
     <string name="dlg_add_sync_pos">Speichern</string>
     <string name="dlg_add_sync_neg">Abbrechen</string>
+    <string name="dlg_choose_folder_title">Ordner auswählen</string>
 
 </resources>

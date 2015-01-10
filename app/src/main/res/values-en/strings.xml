@@ -8,6 +8,9 @@
 
     <string name="msg_no_server_specified">There were no folders specified.</string>
     <string name="msg_no_internet_connection">No internet connection.</string>
+    <string name="msg_address_not_valid">The server address is not valid.</string>
+    <string name="msg_server_no_cifs">The given server is no CIFS server.</string>
+    <string name="msg_could_not_save">Couldn't save the data.</string>
 
     <string name="dlg_add_sync">Create a new synchronization</string>
     <string name="dlg_add_sync_title_server">Serversettings:</string>
@@ -18,5 +21,6 @@
     <string name="dlg_add_sync_text_client_hint">No folder selected.</string>
     <string name="dlg_add_sync_pos">Save</string>
     <string name="dlg_add_sync_neg">Cancel</string>
+    <string name="dlg_choose_folder_title">Choose a folder</string>
 
 </resources>
