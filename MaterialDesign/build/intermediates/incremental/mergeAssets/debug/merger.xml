@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="2" >
+
+    <dataSet config="main" >
+        <source path="I:\Android\android-nas-backup\MaterialDesign\assets" >
+            <file
+                name="sprite_check.png"
+                path="I:\Android\android-nas-backup\MaterialDesign\assets\sprite_check.png" />
+        </source>
+    </dataSet>
+    <dataSet config="debug" >
+        <source path="I:\Android\android-nas-backup\MaterialDesign\src\debug\assets" />
+    </dataSet>
+
+</merger>
