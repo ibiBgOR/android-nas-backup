@@ -10,7 +10,7 @@
     <string name="msg_no_internet_connection">No internet connection.</string>
     <string name="msg_address_not_valid">The server address is not valid.</string>
     <string name="msg_server_no_cifs">The given server is no CIFS server.</string>
-    <string name="msg_could_not_save">Couldn't save the data.</string>
+    <string name="msg_could_not_save">Couldn\'t save the data.</string>
 
     <string name="dlg_add_sync">Create a new synchronization</string>
     <string name="dlg_add_sync_title_server">Serversettings:</string>

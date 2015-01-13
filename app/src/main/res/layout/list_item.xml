@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp">
+
+    <RelativeLayout
+        android:id="@+id/list_item_topline"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:paddingTop="18dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/list_item_server_address"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/list_item_last_sync"
+            android:textSize="16sp"
+            android:textColor="@color/primary_text"
+            android:lines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="Servername" />
+
+        <TextView
+            android:id="@+id/list_item_last_sync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:textSize="14sp"
+            android:textColor="@color/secondary_text"
+            android:singleLine="true"
+            android:ellipsize="none"
+            android:text="Letzte Synchronisation" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/list_item_client_folder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/list_item_topline"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="18dp"
+        android:textSize="14sp"
+        android:textColor="@color/secondary_text"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:text="Ordner auf dem Smartphone" />
+
+</RelativeLayout>

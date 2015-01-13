@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.selfmadeapp.android_nas_backup"
-        minSdkVersion 17
-        targetSdkVersion 20
+        minSdkVersion 14
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -24,4 +24,5 @@ dependencies {
     compile project(':MaterialDesign')
     compile 'com.afollestad:material-dialogs:0.5.9'
     compile 'net.rdrei.android.dirchooser:library:2.1@aar'
+    compile 'com.android.support:appcompat-v7:21.+'
 }

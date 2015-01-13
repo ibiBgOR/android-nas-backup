@@ -1,12 +1,15 @@
 package com.selfmadeapp.android_nas_backup.activities;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +21,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gc.materialdesign.views.Button;
 import com.gc.materialdesign.widgets.SnackBar;
 import com.selfmadeapp.android_nas_backup.R;
+import com.selfmadeapp.android_nas_backup.activities.model.CustomAdapter;
+import com.selfmadeapp.android_nas_backup.activities.model.ListViewModel;
 import com.selfmadeapp.android_nas_backup.network.NetUtils;
 import com.selfmadeapp.android_nas_backup.storage.database.DatabaseHandler;
 import com.selfmadeapp.android_nas_backup.storage.database.model.SyncModel;
@@ -29,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MainActivity extends Activity implements DirectoryChooserFragment.OnFragmentInteractionListener {
+public class MainActivity extends ActionBarActivity implements DirectoryChooserFragment.OnFragmentInteractionListener {
 
     private DatabaseHandler dbHandler;
 
@@ -39,9 +44,13 @@ public class MainActivity extends Activity implements DirectoryChooserFragment.O
     private TextView syncLocationsTitle;
     private ImageView syncNoLocationBackground;
     private Button syncAddLocationButton;
+    private SwipeRefreshLayout syncSwipeRefreshContainer;
 
     private TextView folderChosen;
     private DirectoryChooserFragment mDialog;
+
+    private ArrayAdapter adapter;
+    private List<ListViewModel> adapterData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +73,7 @@ public class MainActivity extends Activity implements DirectoryChooserFragment.O
                         .positiveText(getString(R.string.dlg_add_sync_pos))
                         .positiveColor(Color.parseColor("#03a9f4"))
                         .negativeText(getString(R.string.dlg_add_sync_neg))
-                        .negativeColor(Color.parseColor("#000000"))
+                        .negativeColor(MainActivity.this.getResources().getColor(R.color.primary_text))
                         .callback(new MaterialDialog.ButtonCallback() {
                             @Override
                             public void onPositive(MaterialDialog dialog) {
@@ -111,32 +120,80 @@ public class MainActivity extends Activity implements DirectoryChooserFragment.O
 
         syncLocations = dbHandler.getData();
 
+        syncLocationsListView = (ListView) findViewById(R.id.sync_locations_list_view);
+        syncLocationsTitle = (TextView) findViewById(R.id.sync_locations_title);
+
+        syncNoLocationBackground = (ImageView) findViewById(R.id.sync_no_locations);
+
+        syncSwipeRefreshContainer = (SwipeRefreshLayout) findViewById(R.id.sync_locations_swipe_refresh_container);
+        syncSwipeRefreshContainer.setColorScheme(android.R.color.holo_blue_dark,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_red_dark);
+        syncSwipeRefreshContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Looper.prepare();
+                        final Map<String, String> tmpSettingsMap = dbHandler.getData();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                fillLocationsListView(tmpSettingsMap);
+                                syncSwipeRefreshContainer.setRefreshing(false);
+                            }
+                        });
+                    }
+                }).start();
+            }
+        });
+
+        syncLocationsListView.setEmptyView(syncNoLocationBackground);
+        syncLocationsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int topRowVerticalPosition =
+                        (syncLocationsListView == null || syncLocationsListView.getChildCount() == 0) ?
+                                0 : syncLocationsListView.getChildAt(0).getTop();
+                syncSwipeRefreshContainer.setEnabled(topRowVerticalPosition >= 0);
+            }
+        });
+
         if (syncLocations == null) {
-            syncNoLocationBackground = (ImageView) findViewById(R.id.sync_no_locations);
             // Set background image visible
             syncNoLocationBackground.setVisibility(View.VISIBLE);
-
             Toast.makeText(this, getString(R.string.msg_no_server_specified), Toast.LENGTH_LONG).show();
         } else {
-            syncLocationsListView = (ListView) findViewById(R.id.sync_locations_list_view);
-            syncLocationsTitle = (TextView) findViewById(R.id.sync_locations_title);
-
             fillLocationsListView(syncLocations);
         }
     }
 
     private void fillLocationsListView(Map<String, String> syncLocations) {
-        List<String> clients = new ArrayList<String>();
-        List<String> servers = new ArrayList<String>();
-        // Fill the listview.
-        for (String element : syncLocations.keySet()) {
-            servers.add(element);
-            clients.add(syncLocations.get(element));
+
+        if (adapterData == null) {
+            adapterData = new ArrayList<ListViewModel>();
         }
 
-        final ArrayAdapter adapter = new ArrayAdapter(this,
-                android.R.layout.simple_list_item_1, servers);
-        syncLocationsListView.setAdapter(adapter);
+        adapterData.clear();
+
+        // Fill the listview.
+        for (String element : syncLocations.keySet()) {
+            adapterData.add(new ListViewModel(element, syncLocations.get(element), "Niemals"));
+        }
+
+        if (adapter == null) {
+            adapter = new CustomAdapter(this, adapterData);
+            syncLocationsListView.setAdapter(adapter);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
 
         // Show the title and the listview
         syncLocationsTitle.setVisibility(View.VISIBLE);
@@ -161,8 +218,11 @@ public class MainActivity extends Activity implements DirectoryChooserFragment.O
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                return true;
+            case R.id.action_upload:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

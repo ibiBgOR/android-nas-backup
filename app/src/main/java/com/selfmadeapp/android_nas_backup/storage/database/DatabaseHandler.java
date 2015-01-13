@@ -43,7 +43,7 @@ public class DatabaseHandler {
 
         String[] projection = {
                 SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_SERVER_ADDRESS,
-                SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_SERVER_ADDRESS
+                SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_CLIENT_FOLDER
         };
 
         Cursor c = db.query(
