@@ -5,4 +5,19 @@
         <item name="android:textColor">@color/text_icon</item>
     </style>
 
+    <style name="EditTextSuccess" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/edittext_shape_success</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="EditTextFailed" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/edittext_shape_failed</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="EditTextUnknown" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/edittext_shape_unknown</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
 </resources>

@@ -1,6 +1,5 @@
-package com.selfmadeapp.android_nas_backup.activities;
+package com.selfmadeapp.android_nas_backup.view.activities;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -11,21 +10,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gc.materialdesign.views.Button;
 import com.gc.materialdesign.widgets.SnackBar;
 import com.selfmadeapp.android_nas_backup.R;
-import com.selfmadeapp.android_nas_backup.activities.model.CustomAdapter;
-import com.selfmadeapp.android_nas_backup.activities.model.ListViewModel;
 import com.selfmadeapp.android_nas_backup.network.NetUtils;
 import com.selfmadeapp.android_nas_backup.storage.database.DatabaseHandler;
-import com.selfmadeapp.android_nas_backup.storage.database.model.SyncModel;
+import com.selfmadeapp.android_nas_backup.view.dialogs.AddSynchronisationDialog;
+import com.selfmadeapp.android_nas_backup.view.model.CustomAdapter;
+import com.selfmadeapp.android_nas_backup.view.model.ListViewModel;
 
 import net.rdrei.android.dirchooser.DirectoryChooserFragment;
 
@@ -46,11 +43,10 @@ public class MainActivity extends ActionBarActivity implements DirectoryChooserF
     private Button syncAddLocationButton;
     private SwipeRefreshLayout syncSwipeRefreshContainer;
 
-    private TextView folderChosen;
-    private DirectoryChooserFragment mDialog;
-
     private ArrayAdapter adapter;
     private List<ListViewModel> adapterData;
+
+    private AddSynchronisationDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,54 +63,7 @@ public class MainActivity extends ActionBarActivity implements DirectoryChooserF
         syncAddLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MaterialDialog dialog = new MaterialDialog.Builder(MainActivity.this)
-                        .title(getString(R.string.dlg_add_sync))
-                        .customView(R.layout.custom_dialog_enter_nas, false)
-                        .positiveText(getString(R.string.dlg_add_sync_pos))
-                        .positiveColor(Color.parseColor("#03a9f4"))
-                        .negativeText(getString(R.string.dlg_add_sync_neg))
-                        .negativeColor(MainActivity.this.getResources().getColor(R.color.primary_text))
-                        .callback(new MaterialDialog.ButtonCallback() {
-                            @Override
-                            public void onPositive(MaterialDialog dialog) {
-                                String serverAddress = ((EditText) dialog.findViewById(R.id.custom_dialog_nas_server_address)).getText().toString();
-                                String serverName = ((EditText) dialog.findViewById(R.id.custom_dialog_nas_server_user)).getText().toString();
-                                String serverPass = ((EditText) dialog.findViewById(R.id.custom_dialog_nas_server_pass)).getText().toString();
-
-                                String clientFolder = folderChosen.getText().toString();
-
-                                if (!NetUtils.isValidNetworkAddress(serverAddress)) {
-                                    new SnackBar(MainActivity.this, getString(R.string.msg_address_not_valid)).show();
-                                }
-                                if (!NetUtils.isCifsShare(serverAddress)) {
-                                    new SnackBar(MainActivity.this, getString(R.string.msg_server_no_cifs)).show();
-                                }
-                                if (dbHandler.saveData(new SyncModel(serverAddress, serverName, serverPass, clientFolder)) != -1) {
-                                    MainActivity.this.fillLocationsListView(dbHandler.getData());
-                                } else {
-                                    new SnackBar(MainActivity.this, getString(R.string.msg_could_not_save)).show();
-                                }
-                            }
-
-                            @Override
-                            public void onNegative(MaterialDialog dialog) {
-                                // do nothing
-                            }
-                        })
-                        .build();
-
-                dialog.show();
-
-                folderChosen = ((TextView) dialog.findViewById(R.id.custom_dialog_nas_client_folder));
-                folderChosen.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mDialog = DirectoryChooserFragment.newInstance(getString(R.string.dlg_choose_folder_title), null);
-                        mDialog.show(getFragmentManager(), null);
-                    }
-                });
-
-
+                dialog = new AddSynchronisationDialog(MainActivity.this);
             }
         });
 
@@ -175,7 +124,7 @@ public class MainActivity extends ActionBarActivity implements DirectoryChooserF
         }
     }
 
-    private void fillLocationsListView(Map<String, String> syncLocations) {
+    public void fillLocationsListView(Map<String, String> syncLocations) {
 
         if (adapterData == null) {
             adapterData = new ArrayList<ListViewModel>();
@@ -229,14 +178,15 @@ public class MainActivity extends ActionBarActivity implements DirectoryChooserF
 
     @Override
     public void onSelectDirectory(@NonNull String s) {
-        if (folderChosen != null) {
-            folderChosen.setText(s);
+        if (dialog != null) {
+            dialog.onSelectDirectory(s);
         }
-        mDialog.dismiss();
     }
 
     @Override
     public void onCancelChooser() {
-        mDialog.dismiss();
+        if (dialog != null) {
+            dialog.onCancelChooser();
+        }
     }
 }

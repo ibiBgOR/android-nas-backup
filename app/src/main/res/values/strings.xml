@@ -16,6 +16,7 @@
 
     <string name="dlg_add_sync">Anlegen einer neuen Synchronisation</string>
     <string name="dlg_add_sync_title_server">Servereinstellungen:</string>
+    <string name="dlg_add_sync_edit_server_title">Serveraddresse</string>
     <string name="dlg_add_sync_edit_server_hint">smb://server.adresse/pfad</string>
     <string name="dlg_add_sync_edit_server_user_hint">Nutzername</string>
     <string name="dlg_add_sync_edit_server_pass_hint">Passwort</string>
@@ -24,5 +25,7 @@
     <string name="dlg_add_sync_pos">Speichern</string>
     <string name="dlg_add_sync_neg">Abbrechen</string>
     <string name="dlg_choose_folder_title">Ordner auswählen</string>
+
+    <string name="dlg_choose_share">Server auswählen</string>
 
 </resources>

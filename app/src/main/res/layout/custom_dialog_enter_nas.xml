@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10sp"
         android:text="@string/dlg_add_sync_title_server"
         android:id="@+id/custom_dialog_nas_server_title"
         android:textStyle="bold"
@@ -20,31 +22,55 @@
         android:layout_below="@id/custom_dialog_nas_server_title"
         android:id="@+id/custom_dialog_nas">
 
-        <EditText
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/custom_dialog_nas_server_address"
-            android:hint="@string/dlg_add_sync_edit_server_hint" />
+            android:id="@+id/custom_dialog_nas_server">
 
-        <EditText
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/custom_dialog_nas_server_address"
+                android:hint="@string/dlg_add_sync_edit_server_hint"
+                app:baseColor="@color/primary_text"
+                app:primaryColor="@color/primary"
+                app:errorColor="#982360"
+                app:floatingLabel="normal"
+                app:floatingLabelText="@string/dlg_add_sync_edit_server_title" />
+
+
+        </RelativeLayout>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/custom_dialog_nas_server_address"
+            android:layout_below="@id/custom_dialog_nas_server"
             android:hint="@string/dlg_add_sync_edit_server_user_hint"
-            android:id="@+id/custom_dialog_nas_server_user" />
+            android:id="@+id/custom_dialog_nas_server_user"
+            app:baseColor="@color/primary_text"
+            app:primaryColor="@color/primary"
+            app:errorColor="#982360"
+            app:floatingLabel="normal"
+            app:floatingLabelText="@string/dlg_add_sync_edit_server_user_hint" />
 
-        <EditText
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:password="true"
             android:layout_below="@id/custom_dialog_nas_server_user"
             android:hint="@string/dlg_add_sync_edit_server_pass_hint"
-            android:id="@+id/custom_dialog_nas_server_pass" />
+            android:id="@+id/custom_dialog_nas_server_pass"
+            app:baseColor="@color/primary_text"
+            app:primaryColor="@color/primary"
+            app:errorColor="#982360"
+            app:floatingLabel="normal"
+            app:floatingLabelText="@string/dlg_add_sync_edit_server_pass_hint" />
     </RelativeLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:layout_below="@id/custom_dialog_nas"
         android:text="@string/dlg_add_sync_title_client"
         android:textSize="20dp"

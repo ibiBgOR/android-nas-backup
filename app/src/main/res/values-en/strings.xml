@@ -15,6 +15,7 @@
     <string name="dlg_add_sync">Create a new synchronization</string>
     <string name="dlg_add_sync_title_server">Serversettings:</string>
     <string name="dlg_add_sync_edit_server_hint">smb://server.address/path</string>
+    <string name="dlg_add_sync_edit_server_neg">Not a valid address.</string>
     <string name="dlg_add_sync_edit_server_user_hint">Username</string>
     <string name="dlg_add_sync_edit_server_pass_hint">Password</string>
     <string name="dlg_add_sync_title_client">Clientfolder:</string>

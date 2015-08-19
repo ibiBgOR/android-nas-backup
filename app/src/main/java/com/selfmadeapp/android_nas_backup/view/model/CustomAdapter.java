@@ -1,4 +1,4 @@
-package com.selfmadeapp.android_nas_backup.activities.model;
+package com.selfmadeapp.android_nas_backup.view.model;
 
 import android.content.Context;
 import android.view.LayoutInflater;

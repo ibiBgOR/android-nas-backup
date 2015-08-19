@@ -1,4 +1,4 @@
-package com.selfmadeapp.android_nas_backup.activities.model;
+package com.selfmadeapp.android_nas_backup.view.model;
 
 /**
  * Created by oruckdeschel on 11.01.2015.
