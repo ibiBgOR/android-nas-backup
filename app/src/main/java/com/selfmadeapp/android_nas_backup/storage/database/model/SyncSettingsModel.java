@@ -12,7 +12,6 @@ public final class SyncSettingsModel {
 
     public static abstract class SyncSettingsEntry implements BaseColumns {
         public static final String TABLE_NAME = "syncEntry";
-        public static final String COLUMN_NAME_ENTRY_ID = "entryid";
         public static final String COLUMN_NAME_SERVER_ADDRESS = "serveraddress";
         public static final String COLUMN_NAME_SERVER_USER = "serveruser";
         public static final String COLUMN_NAME_SERVER_PASS = "serverpass";
@@ -27,7 +26,6 @@ public final class SyncSettingsModel {
     public static final String SYNC_TABLE_CREATE =
             "CREATE TABLE " + SyncSettingsEntry.TABLE_NAME + " (" +
                     SyncSettingsEntry._ID + " INTEGER PRIMARY KEY," +
-                    SyncSettingsEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
                     SyncSettingsEntry.COLUMN_NAME_SERVER_ADDRESS + TEXT_TYPE + COMMA_SEP +
                     SyncSettingsEntry.COLUMN_NAME_SERVER_USER + TEXT_TYPE + COMMA_SEP +
                     SyncSettingsEntry.COLUMN_NAME_SERVER_PASS + TEXT_TYPE + COMMA_SEP +

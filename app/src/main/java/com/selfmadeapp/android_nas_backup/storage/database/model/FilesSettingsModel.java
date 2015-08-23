@@ -12,7 +12,6 @@ public final class FilesSettingsModel {
 
     public static abstract class FileSettingsEntry implements BaseColumns {
         public static final String TABLE_NAME = "fileEntry";
-        public static final String COLUMN_NAME_ENTRY_ID = "entryid";
         public static final String COLUMN_NAME_FILE_NAME = "file_name";
         public static final String COLUMN_NAME_SERVER_CONFIG = "server_config";
         public static final String COLUMN_NAME_LAST_SYNCED = "last_synced";
@@ -28,14 +27,15 @@ public final class FilesSettingsModel {
     public static final String FILE_TABLE_CREATE =
             "CREATE TABLE " + FileSettingsEntry.TABLE_NAME + " (" +
                     FileSettingsEntry._ID + " INTEGER PRIMARY KEY," +
-                    FileSettingsEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
                     FileSettingsEntry.COLUMN_NAME_FILE_NAME + TEXT_TYPE + COMMA_SEP +
                     FileSettingsEntry.COLUMN_NAME_SERVER_CONFIG + INTEGER_TYPE + COMMA_SEP +
                     FileSettingsEntry.COLUMN_NAME_LAST_SYNCED + TIMESTAMP_TYPE + COMMA_SEP +
                     FileSettingsEntry.COLUMN_NAME_CHANGES + BOOLEAN_TYPE + COMMA_SEP +
                     " FOREIGN KEY(" + FileSettingsEntry.COLUMN_NAME_SERVER_CONFIG +
                     ") REFERENCES " + SyncSettingsModel.SyncSettingsEntry.TABLE_NAME +
-                    "(" + SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_ENTRY_ID + "))";
+                    "(" + SyncSettingsModel.SyncSettingsEntry._ID + ")" + COMMA_SEP +
+                    " UNIQUE(" + FileSettingsEntry.COLUMN_NAME_FILE_NAME + COMMA_SEP +
+                    FileSettingsEntry.COLUMN_NAME_SERVER_CONFIG + "))";
 
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + FileSettingsEntry.TABLE_NAME;

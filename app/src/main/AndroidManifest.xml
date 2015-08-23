@@ -17,6 +17,12 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".services.FileFetcherService"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/service_name_file_fetch">
+        </service>
+
         <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
     </application>
 

@@ -70,6 +70,33 @@ public class DatabaseHandler {
         return result;
     }
 
+    /**
+     * Get the folder, which is assigned to the serverConfigId.
+     * @param serverConfigId The Id from the database.
+     * @return  The folder as string.
+     */
+    public String getFolderForSyncLocation(int serverConfigId) {
+        SQLiteDatabase db = database.getReadableDatabase();
+
+        String[] projection = {
+                SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_CLIENT_FOLDER
+        };
+
+        String where = SyncSettingsModel.SyncSettingsEntry._ID + " = " + serverConfigId;
+
+        Cursor c = db.query(
+                SyncSettingsModel.SyncSettingsEntry.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                where, null, null, null, null
+        );
+
+        if (!c.moveToFirst()) {
+            return null;
+        }
+
+        return c.getString(0);
+    }
+
     public long saveFilesData(FileModel model) {
         SQLiteDatabase db = database.getWritableDatabase();
 
@@ -77,9 +104,20 @@ public class DatabaseHandler {
         values.put(FilesSettingsModel.FileSettingsEntry.COLUMN_NAME_FILE_NAME, model.getFileName());
         values.put(FilesSettingsModel.FileSettingsEntry.COLUMN_NAME_SERVER_CONFIG, model.getServerConfig());
         values.put(FilesSettingsModel.FileSettingsEntry.COLUMN_NAME_LAST_SYNCED, model.getLastSynced());
-        values.put(FilesSettingsModel.FileSettingsEntry.COLUMN_NAME_CHANGES, FileModel.FILE_WAS_NOT_SYNCED);
+        values.put(FilesSettingsModel.FileSettingsEntry.COLUMN_NAME_CHANGES, model.wereChanges());
 
         return db.insert(FilesSettingsModel.FileSettingsEntry.TABLE_NAME, null, values);
+    }
+
+    public long saveFilesData(List<FileModel> files) {
+        long worstCase = 0;
+
+        for(FileModel file : files) {
+            long curCase = saveFilesData(file);
+            worstCase = curCase > worstCase ? curCase : worstCase;
+        }
+
+        return worstCase;
     }
 
     public List<FileModel> getAllFilesData() {
@@ -104,6 +142,8 @@ public class DatabaseHandler {
             return null;
         }
 
+        result.add(new FileModel(c.getString(0), c.getInt(1), c.getLong(2), c.getShort(3)));
+
         while (c.moveToNext()) {
             result.add(new FileModel(c.getString(0), c.getInt(1), c.getLong(2), c.getShort(3)));
         }
@@ -117,5 +157,27 @@ public class DatabaseHandler {
 
     public List<FileModel> getFileData(boolean changes) {
         return null;
+    }
+
+    public int getSyncLocation(String clientFolderName, String serverFolderName) {
+        SQLiteDatabase db = database.getReadableDatabase();
+
+        String[] projection = {
+                FilesSettingsModel.FileSettingsEntry._ID
+        };
+
+        String where = SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_CLIENT_FOLDER + " = '" + clientFolderName +
+                "' AND " + SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_SERVER_ADDRESS + " = '" + serverFolderName + "'";
+
+        Cursor c = db.query(
+                SyncSettingsModel.SyncSettingsEntry.TABLE_NAME,
+                projection, where, null, null, null, null
+        );
+
+        if (!c.moveToFirst()) {
+            return -1;
+        }
+
+        return c.getInt(0);
     }
 }

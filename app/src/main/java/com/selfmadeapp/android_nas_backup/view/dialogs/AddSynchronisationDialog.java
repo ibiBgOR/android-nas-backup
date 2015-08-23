@@ -2,6 +2,7 @@ package com.selfmadeapp.android_nas_backup.view.dialogs;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import com.selfmadeapp.android_nas_backup.R;
 import com.selfmadeapp.android_nas_backup.ServerAddressTextWatcherValidator;
 import com.selfmadeapp.android_nas_backup.network.NetUtils;
+import com.selfmadeapp.android_nas_backup.services.FileFetcherService;
 import com.selfmadeapp.android_nas_backup.storage.database.DatabaseHandler;
 import com.selfmadeapp.android_nas_backup.storage.database.model.SyncModel;
 import com.selfmadeapp.android_nas_backup.view.activities.MainActivity;
@@ -57,6 +59,13 @@ public class AddSynchronisationDialog {
                         }
                         if (dbHandler.saveSyncData(new SyncModel(serverAddress, serverName, serverPass, clientFolder)) != -1) {
                             ((MainActivity) context).fillLocationsListView(dbHandler.getSyncData());
+
+                            // Start FileFetching to retrieve all files
+                            Intent i= new Intent(context, FileFetcherService.class);
+                            i.putExtra(FileFetcherService.EXTRA_CLIENT_FOLDER, clientFolder);
+                            i.putExtra(FileFetcherService.EXTRA_SERVER_LOCATION, serverAddress);
+
+                            context.startService(i);
                         } else {
                             new SnackBar((android.app.Activity) context, context.getString(R.string.msg_could_not_save)).show();
                         }
