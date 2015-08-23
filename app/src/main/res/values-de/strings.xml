@@ -5,6 +5,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="service_name_file_fetch">Datei Preloader</string>
+    <string name="service_name_file_upload">Datei Upload</string>
 
     <string name="title_synclist">Synchronisationsordner</string>
 

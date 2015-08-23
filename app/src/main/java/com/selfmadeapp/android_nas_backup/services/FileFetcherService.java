@@ -24,6 +24,10 @@ public class FileFetcherService extends Service {
         String clientFolderName = intent.getStringExtra(EXTRA_CLIENT_FOLDER);
         String serverFolderName = intent.getStringExtra(EXTRA_SERVER_LOCATION);
 
+        if (clientFolderName == null || serverFolderName == null) {
+            return Service.START_NOT_STICKY;
+        }
+
         File rootFolder = new File(clientFolderName);
         List<File> fileList = getListFiles(rootFolder);
 

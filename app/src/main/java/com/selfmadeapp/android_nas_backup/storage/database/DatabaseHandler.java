@@ -71,15 +71,18 @@ public class DatabaseHandler {
     }
 
     /**
-     * Get the folder, which is assigned to the serverConfigId.
+     * Get the server, which is assigned to the serverConfigId.
      * @param serverConfigId The Id from the database.
-     * @return  The folder as string.
+     * @return Map include the whole server config.
      */
-    public String getFolderForSyncLocation(int serverConfigId) {
+    public Map<String, String> getServerConfig(int serverConfigId) {
         SQLiteDatabase db = database.getReadableDatabase();
 
         String[] projection = {
-                SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_CLIENT_FOLDER
+                SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_SERVER_ADDRESS,
+                SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_CLIENT_FOLDER,
+                SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_SERVER_USER,
+                SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_SERVER_PASS
         };
 
         String where = SyncSettingsModel.SyncSettingsEntry._ID + " = " + serverConfigId;
@@ -94,7 +97,13 @@ public class DatabaseHandler {
             return null;
         }
 
-        return c.getString(0);
+        Map<String, String> result = new HashMap<>();
+        result.put(SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_SERVER_ADDRESS, c.getString(0));
+        result.put(SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_CLIENT_FOLDER, c.getString(1));
+        result.put(SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_SERVER_USER, c.getString(2));
+        result.put(SyncSettingsModel.SyncSettingsEntry.COLUMN_NAME_SERVER_PASS, c.getString(3));
+
+        return result;
     }
 
     public long saveFilesData(FileModel model) {

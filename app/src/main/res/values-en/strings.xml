@@ -5,6 +5,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="service_name_file_fetch">File Preloader</string>
+    <string name="service_name_file_upload">File Upload</string>
 
     <string name="title_synclist">Synchronizationfolder</string>
 

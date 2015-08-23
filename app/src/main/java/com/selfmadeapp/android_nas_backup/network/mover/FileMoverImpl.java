@@ -3,6 +3,7 @@ package com.selfmadeapp.android_nas_backup.network.mover;
 import android.content.Context;
 import android.util.Log;
 
+import com.selfmadeapp.android_nas_backup.network.NetworkDriveDiscovery;
 import com.selfmadeapp.android_nas_backup.network.mover.model.UploadFile;
 
 import java.io.DataInputStream;
@@ -34,12 +35,37 @@ public class FileMoverImpl implements FileMover {
         List<UploadFile> workFiles = files;
 
         for (UploadFile file : files) {
-            uploadSingleFile(auth, file);
+            uploadSingleFile(auth, file, new Callback() {
+                @Override
+                public void onSuccess() {
+                    // do nothing
+                }
+
+                @Override
+                public void onError() {
+                    // do nothing
+                }
+            });
             workFiles.remove(file);
         }
     }
 
-    private void uploadSingleFile(final NtlmPasswordAuthentication auth, final UploadFile file) {
+    @Override
+    public void uploadFile(NtlmPasswordAuthentication auth, UploadFile file, final Callback callback) {
+        uploadSingleFile(auth, file, new Callback() {
+            @Override
+            public void onSuccess() {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onError() {
+                callback.onError();
+            }
+        });
+    }
+
+    private void uploadSingleFile(final NtlmPasswordAuthentication auth, final UploadFile file, final Callback callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -47,15 +73,17 @@ public class FileMoverImpl implements FileMover {
                     @Override
                     public void onSuccess() {
                         Log.i(TAG, "Yey");
+                        callback.onSuccess();
                     }
 
                     @Override
                     public void onError() {
                         Log.i(TAG, "Oh damn");
+                        callback.onError();
                     }
                 });
             }
-        });
+        }).start();
     }
 
     private void uploadFileToServer(NtlmPasswordAuthentication auth, UploadFile file, Callback callback) {
@@ -71,9 +99,10 @@ public class FileMoverImpl implements FileMover {
         }
 
         try {
-            SmbFile smbFile = new SmbFile(file.getDestFolder().concat(file.getFile().getPath().replace("/storage/emulated/0/", "")), auth);
+            SmbFile smbFile = new SmbFile(file.getDestFolder(), auth);
 
             try {
+                new SmbFile(file.getDestFolder().substring(0, file.getDestFolder().lastIndexOf("/")), auth).mkdirs();
                 smbFile.createNewFile();
             } catch (final SmbException e) {
                 Log.e(TAG, "Couldn't create file on server");
@@ -107,11 +136,4 @@ public class FileMoverImpl implements FileMover {
         }
 
     }
-
-    private interface Callback {
-        void onSuccess();
-
-        void onError();
-    }
-
 }

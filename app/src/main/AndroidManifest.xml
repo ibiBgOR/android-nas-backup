@@ -22,6 +22,11 @@
             android:icon="@drawable/ic_launcher"
             android:label="@string/service_name_file_fetch">
         </service>
+        <service
+            android:name=".services.FileUploadService"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/service_name_file_upload">
+        </service>
 
         <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
     </application>

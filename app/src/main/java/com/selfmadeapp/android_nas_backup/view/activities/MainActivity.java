@@ -1,5 +1,6 @@
 package com.selfmadeapp.android_nas_backup.view.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -19,6 +20,8 @@ import com.gc.materialdesign.views.Button;
 import com.gc.materialdesign.widgets.SnackBar;
 import com.selfmadeapp.android_nas_backup.R;
 import com.selfmadeapp.android_nas_backup.network.NetUtils;
+import com.selfmadeapp.android_nas_backup.services.FileFetcherService;
+import com.selfmadeapp.android_nas_backup.services.FileUploadService;
 import com.selfmadeapp.android_nas_backup.storage.database.DatabaseHandler;
 import com.selfmadeapp.android_nas_backup.view.dialogs.AddSynchronisationDialog;
 import com.selfmadeapp.android_nas_backup.view.model.CustomAdapter;
@@ -171,7 +174,10 @@ public class MainActivity extends ActionBarActivity implements DirectoryChooserF
             case R.id.action_settings:
                 return true;
             case R.id.action_upload:
-                break;
+                // Start FileFetching to retrieve all files
+                Intent i= new Intent(this, FileUploadService.class);
+                this.startService(i);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

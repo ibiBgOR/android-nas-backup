@@ -1,5 +1,6 @@
 package com.selfmadeapp.android_nas_backup.network.mover;
 
+import com.selfmadeapp.android_nas_backup.network.NetworkDriveDiscovery;
 import com.selfmadeapp.android_nas_backup.network.mover.model.UploadFile;
 
 import java.util.List;
@@ -14,5 +15,12 @@ public interface FileMover {
     static final String TAG = "FileMover";
 
     public void uploadFiles(NtlmPasswordAuthentication auth, List<UploadFile> files);
+
+    public void uploadFile(NtlmPasswordAuthentication auth, UploadFile file, Callback callback);
+
+    interface Callback {
+        void onSuccess();
+        void onError();
+    }
 
 }
