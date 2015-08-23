@@ -40,52 +40,52 @@ public class ServerAddressTextWatcherValidator implements TextWatcher {
         if (editable.toString().equals("")) {
             materialEditText.setBaseColor(context.getResources().getColor(R.color.primary_text));
             materialEditText.setPrimaryColor(context.getResources().getColor(R.color.primary));
-        } else {
-            NetUtils.isValidNetworkAddress(editable.toString(), new Callback() {
-                @Override
-                public void onSuccess() {
-                    NetUtils.isCifsShare(editable.toString(), new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            // make edittext show success!
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            materialEditText.setBaseColor(context.getResources().getColor(android.R.color.holo_purple));
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onError() {
-                            // make edittext show error!
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            materialEditText.setError(context.getResources().getText(R.string.dlg_add_sync_edit_server_neg));
-                                        }
-                                    });
-                                }
-                            });
-
-                        }
-                    });
-                }
-
-                @Override
-                public void onError() {
-                    // make edittext show error!
-                    materialEditText.setError(context.getResources().getText(R.string.dlg_add_sync_edit_server_neg));
-                }
-            });
+            return;
         }
+
+        NetUtils.isValidNetworkAddress(editable.toString(), new Callback() {
+            @Override
+            public void onSuccess() {
+                NetUtils.isCifsShare(editable.toString(), new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // make edittext show success!
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        materialEditText.setBaseColor(context.getResources().getColor(android.R.color.holo_purple));
+                                    }
+                                });
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError() {
+                        // make edittext show error!
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        materialEditText.setError(context.getResources().getText(R.string.dlg_add_sync_edit_server_neg));
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            @Override
+            public void onError() {
+                // make edittext show error!
+                materialEditText.setError(context.getResources().getText(R.string.dlg_add_sync_edit_server_neg));
+            }
+        });
     }
 }

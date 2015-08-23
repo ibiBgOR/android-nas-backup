@@ -67,7 +67,7 @@ public class MainActivity extends ActionBarActivity implements DirectoryChooserF
             }
         });
 
-        syncLocations = dbHandler.getData();
+        syncLocations = dbHandler.getSyncData();
 
         syncLocationsListView = (ListView) findViewById(R.id.sync_locations_list_view);
         syncLocationsTitle = (TextView) findViewById(R.id.sync_locations_title);
@@ -86,7 +86,7 @@ public class MainActivity extends ActionBarActivity implements DirectoryChooserF
                     @Override
                     public void run() {
                         Looper.prepare();
-                        final Map<String, String> tmpSettingsMap = dbHandler.getData();
+                        final Map<String, String> tmpSettingsMap = dbHandler.getSyncData();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

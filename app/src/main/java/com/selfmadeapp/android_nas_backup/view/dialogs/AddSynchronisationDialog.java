@@ -55,8 +55,8 @@ public class AddSynchronisationDialog {
                         if (!NetUtils.isValidNetworkAddress()) {
                             new SnackBar((android.app.Activity) context, context.getString(R.string.msg_address_not_valid)).show();
                         }
-                        if (dbHandler.saveData(new SyncModel(serverAddress, serverName, serverPass, clientFolder)) != -1) {
-                            ((MainActivity) context).fillLocationsListView(dbHandler.getData());
+                        if (dbHandler.saveSyncData(new SyncModel(serverAddress, serverName, serverPass, clientFolder)) != -1) {
+                            ((MainActivity) context).fillLocationsListView(dbHandler.getSyncData());
                         } else {
                             new SnackBar((android.app.Activity) context, context.getString(R.string.msg_could_not_save)).show();
                         }
